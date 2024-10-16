@@ -4,7 +4,7 @@
 
 S3-website URL: http://task-2-alejandro-santoyo.s3-website-us-east-1.amazonaws.com/
 
-CloudFront URL: https://d1zh618m90woj0.cloudfront.net/
+CloudFront URL: https://d299794zlyqjuy.cloudfront.net
 
 CloudFront URL using AWS CDK constructs: https://d2t0ox4uzzyhrk.cloudfront.net
 
