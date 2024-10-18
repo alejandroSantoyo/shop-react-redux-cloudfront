@@ -1,5 +1,13 @@
 # React-shop-cloudfront
 
+## App urls:
+
+S3-website URL: http://task-2-alejandro-santoyo.s3-website-us-east-1.amazonaws.com/
+
+CloudFront URL: https://d299794zlyqjuy.cloudfront.net
+
+CloudFront URL using AWS CDK constructs: https://d2t0ox4uzzyhrk.cloudfront.net
+
 This is frontend starter project for nodejs-aws mentoring program. It uses the following technologies:
 
 - [Vite](https://vitejs.dev/) as a project bundler
