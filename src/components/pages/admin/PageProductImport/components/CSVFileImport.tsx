@@ -10,6 +10,7 @@ type CSVFileImportProps = {
 
 export default function CSVFileImport({ url, title }: CSVFileImportProps) {
   const [file, setFile] = React.useState<File>();
+  const [error, setError] = React.useState<String | null>(null);
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -25,22 +26,24 @@ export default function CSVFileImport({ url, title }: CSVFileImportProps) {
 
   const uploadFile = async () => {
     if (!file) return;
+
     console.log("uploadFile to", url);
 
     try {
-      // Get the presigned URL
-      const response: AxiosResponse<{ url: string }> = await axios({
-        method: "GET",
-        url,
-        params: {
-          fileName: encodeURIComponent(file.name),
+      const response = await fetch('https://wpzc6au01c.execute-api.us-east-1.amazonaws.com/prod/import?fileName=test.csv', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+
         },
-      });
+      })
 
-      console.log("File to upload: ", file.name);
-      console.log("Uploading to: ", response.data);
+      if (!response.ok) {
+        console.log(response.status)
+        throw new Error(response.status.toString());
+      }
 
-      const { url: presignedUrl } = response.data
+      const { url: presignedUrl } = await response.json();
 
       const result = await fetch(presignedUrl, {
         method: "PUT",
@@ -49,10 +52,18 @@ export default function CSVFileImport({ url, title }: CSVFileImportProps) {
           'Content-Type': 'text/csv'
         }
       });
+
       console.log("Result: ", result);
+      
       setFile(undefined);
-    } catch (error) {
-      console.error("Uploading ERROR:", error);
+      setError(null);
+    } catch (error: any) {
+      console.trace("error message", error)
+      if (error.message === "401") {
+        setError("Unauthorized, please log in");
+      } else if (error.message === "403") {
+        setError("Forbidden, you don't have access to this!")
+      }
     }
   };
 
@@ -61,8 +72,11 @@ export default function CSVFileImport({ url, title }: CSVFileImportProps) {
       <Typography variant="h6" gutterBottom>
         {title}
       </Typography>
+      <Typography variant="h6" gutterBottom color={"red"}>
+        {error}
+      </Typography>
       {!file ? (
-        <input type="file" onChange={onFileChange} />
+        <input type="file" accept="text/csv" onChange={onFileChange} />
       ) : (
         <div>
           <button onClick={removeFile}>Remove file</button>
