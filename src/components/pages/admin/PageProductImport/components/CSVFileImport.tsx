@@ -30,11 +30,11 @@ export default function CSVFileImport({ url, title }: CSVFileImportProps) {
     console.log("uploadFile to", url);
 
     try {
-      const response = await fetch('https://wpzc6au01c.execute-api.us-east-1.amazonaws.com/prod/import?fileName=test.csv', {
+      const response = await fetch(url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-
+          'Authorization': `Basic ${localStorage.getItem("authorization_token")}`
         },
       })
 
